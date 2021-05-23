@@ -1,0 +1,80 @@
+<!doctype html>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} {{ title }}  {% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'css/alltodos.css' %}">
+{% endblock %}
+
+
+{% block content %}
+
+    <h1 style="user-select:none">Simple Todo App</h1>
+
+    <center class="mt-5 mb-5">
+        <div class="row">
+            <div class="col-md">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="row">
+                      <div class="col-1 d-flex justify-content-end" style="user-select:none">
+                        <label class="col-form-label d-flex align-items-center">{{ form.task.label_tag }}</label>
+                      </div>
+                      <div class="col-auto">
+                        {{ form.task }}
+                      </div>
+                      <div class="col-auto">
+                        <span class="form-text d-flex align-items-center">
+                            <button type="submit" class="btn btn-primary fw-bold submit">Add +</button>
+                        </span>
+                      </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </center>
+
+    <table class="table table-hover" style="user-select:none">
+      <thead>
+        <tr style="user-select:none">
+          <th scope="col">#</th>
+          <th scope="col">Task Names</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for todo in tasks %}
+        <tr>
+          <th scope="row">
+            {{ forloop.counter }}
+          </th>
+          <td>
+              <div class="row">
+                <div class="col" onclick="location.href='{% url 'edittodos' todo.id %}'" style="cursor:pointer; display:flex; align-items:center">
+                    <span>
+                        {{ todo.task }}
+                    </span>
+                </div>
+                <div class="col text-center">
+                  <div class="row">
+                      <div class="col">
+                          <span class="d-flex justify-content-end">
+                            <a href="{% url 'edittodos' todo.id %}" class="btn btn-secondary mr-4">Edit</a>
+                          </span>
+                      </div>
+                      <div class="col">
+                          <span class="d-flex justify-content-start">
+                            <a href="{% url 'deletetodos' todo.id %}" class="btn btn-danger ml-4">Delete</a>
+                          </span>
+                      </div>
+                  </div>
+                </div>
+              </div>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+{% endblock %}

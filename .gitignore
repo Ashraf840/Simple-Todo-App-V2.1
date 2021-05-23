@@ -1,0 +1,7 @@
+# Django stuff:
+*.sqlite3
+
+# Personal Text file of this project:
+Configure Pycharm with Django Project.txt
+Project Procedure.txt
+
