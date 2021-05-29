@@ -51,7 +51,7 @@
           </th>
           <td>
               <div class="row">
-                <div class="col" onclick="location.href='{% url 'edittodos' todo.id %}'" style="cursor:pointer; display:flex; align-items:center">
+                <div class="col" onclick="location.href='{% url 'todoApp:edittodos' todo.id %}'" style="cursor:pointer; display:flex; align-items:center">
                     <span>
                         {{ todo.task }}
                     </span>
@@ -60,12 +60,12 @@
                   <div class="row">
                       <div class="col">
                           <span class="d-flex justify-content-end">
-                            <a href="{% url 'edittodos' todo.id %}" class="btn btn-secondary mr-4">Edit</a>
+                            <a href="{% url 'todoApp:edittodos' todo.id %}" class="btn btn-secondary mr-4">Edit</a>
                           </span>
                       </div>
                       <div class="col">
                           <span class="d-flex justify-content-start">
-                            <a href="{% url 'deletetodos' todo.id %}" class="btn btn-danger ml-4">Delete</a>
+                            <a href="{% url 'todoApp:deletetodos' todo.id %}" class="btn btn-danger ml-4">Delete</a>
                           </span>
                       </div>
                   </div>
