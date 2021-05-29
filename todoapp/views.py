@@ -2,12 +2,21 @@ from django.shortcuts import render, redirect
 # from django.http import HttpResponseRedirect
 from .models import MyTodo
 from .forms import TodoForm
+from django.core.paginator import Paginator
 
 
 # Create your views here.
 def allTodos(request):      # Retrieve, Create
     tasks = MyTodo.objects.all()
     form = TodoForm()
+
+    tasksNum = len(tasks)  # dict length/ total num of row in db
+
+    #for paging
+    tasksList = tasks
+    paginator = Paginator(tasksList, 5)         # display per page = 5
+    page = request.GET.get('page')              # get the page num from the URL
+    tasks = paginator.get_page(page)     # append all the linked pages to "tasks" queryset
 
     if request.method == 'POST':
         form = TodoForm(request.POST)
@@ -19,6 +28,7 @@ def allTodos(request):      # Retrieve, Create
         'title': 'Home',
         'tasks': tasks,
         'form': form,
+        'totalTasksNum': tasksNum,
     }
     return render(request, 'todo/alltodos.html', context)
 

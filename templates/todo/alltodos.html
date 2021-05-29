@@ -50,31 +50,68 @@
             {{ forloop.counter }}
           </th>
           <td>
-              <div class="row">
-                <div class="col" onclick="location.href='{% url 'todoApp:edittodos' todo.id %}'" style="cursor:pointer; display:flex; align-items:center">
-                    <span>
-                        {{ todo.task }}
-                    </span>
-                </div>
-                <div class="col text-center">
-                  <div class="row">
-                      <div class="col">
-                          <span class="d-flex justify-content-end">
-                            <a href="{% url 'todoApp:edittodos' todo.id %}" class="btn btn-secondary mr-4">Edit</a>
-                          </span>
-                      </div>
-                      <div class="col">
-                          <span class="d-flex justify-content-start">
-                            <a href="{% url 'todoApp:deletetodos' todo.id %}" class="btn btn-danger ml-4">Delete</a>
-                          </span>
-                      </div>
-                  </div>
+            <div class="row">
+              <div class="col" onclick="location.href='{% url 'todoApp:edittodos' todo.id %}'" style="cursor:pointer; display:flex; align-items:center">
+                  <span>
+                      {{ todo.task }}
+                  </span>
+              </div>
+              <div class="col text-center">
+                <div class="row">
+                    <div class="col">
+                        <span class="d-flex justify-content-end">
+                          <a href="{% url 'todoApp:edittodos' todo.id %}" class="btn btn-secondary mr-4">Edit</a>
+                        </span>
+                    </div>
+                    <div class="col">
+                        <span class="d-flex justify-content-start">
+                          <a href="{% url 'todoApp:deletetodos' todo.id %}" class="btn btn-danger ml-4">Delete</a>
+                        </span>
+                    </div>
                 </div>
               </div>
+            </div>
           </td>
         </tr>
       {% endfor %}
       </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="6" class="text-center">
+              <b>Total Tasks: {{ totalTasksNum }}</b>                            
+          </td>
+        </tr>
+      </tfoot>
     </table>
+
+    <!-- adding paginator -->
+    {% if tasks.has_other_pages %}
+      <!-- If it has other pages, then this text will be visible. Check test -->
+      <ul class="pagination">
+        <!-- Previous Sign Symbol -->
+        {% if tasks.has_previous %}
+          <li class="page-item"> <a class="page-link" href="?page={{ tasks.previous_page_number }}" style="text-decoration: none;">&laquo; &nbsp;&nbsp;</a> </li>
+        {% else %}
+          <li class="page-item disabled"> <a href="#" class="page-link text-muted"><span>&laquo; &nbsp;&nbsp;</span></a> </li>
+        {% endif %}
+
+        <!-- All the page numbers -->
+        {% for pg in tasks.paginator.page_range %}
+          {% if tasks.number == pg %}
+            <li class="page-item active"> <a href="#" class="page-link"><span style="font-weight: bold;">{{ pg }} &nbsp;&nbsp;</span></a> </li>
+          {% else %}                      
+            <li class="page-item"> <a href="?page={{ pg }}" class="page-link"> {{ pg }} &nbsp;&nbsp;</a> </li>
+          {% endif %}
+        {% endfor %}
+
+        <!-- Next Sign Symbol -->
+        {% if tasks.has_next %}
+          <li class="page-item"> <a href="?page={{ tasks.next_page_number }}" class="page-link" style="text-decoration: none;">&raquo; &nbsp;&nbsp;</a> </li>
+        {% else %}
+          <li class="page-item disabled"> <a href="#" class="page-link text-muted"><span>&raquo;</span></a> </li>
+        {% endif %}
+      </ul>
+    {% endif %}
+
 
 {% endblock %}
