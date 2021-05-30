@@ -7,7 +7,7 @@ from django.core.paginator import Paginator
 
 # Create your views here.
 def allTodos(request):      # Retrieve, Create
-    tasks = MyTodo.objects.all()
+    tasks = MyTodo.objects.order_by('-id')      # display latest task at the beginning
     form = TodoForm()
 
     tasksNum = len(tasks)  # dict length/ total num of row in db
@@ -16,7 +16,7 @@ def allTodos(request):      # Retrieve, Create
     tasksList = tasks
     paginator = Paginator(tasksList, 5)         # display per page = 5
     page = request.GET.get('page')              # get the page num from the URL
-    tasks = paginator.get_page(page)     # append all the linked pages to "tasks" queryset
+    tasks = paginator.get_page(page)            # append all the linked pages to "tasks" queryset
 
     if request.method == 'POST':
         form = TodoForm(request.POST)
