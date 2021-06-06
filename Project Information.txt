@@ -1,0 +1,218 @@
+**************** Create a "Todo" App with Integrated API + User Authentication ****************
+
+
+******** Configure the Git & GitHub
+*** Fetch from another remote repo ("Simple-Todo-App") & push to another remote repo ("Simple-Todo-App-V2.0") in GitHub
+
+1. Redirect to the desired directory and open the terminal from that directory.
+
+2. Open terminal to clone the basic "Todo" app project (without API)
+	ls -l
+	git clone https://github.com/Ashraf840/Simple-Todo-App.git
+
+3. Check the status of git & git remote
+	git status
+	git remote -v
+(displaying git remotes)
+[output] 
+	origin  https://github.com/Ashraf840/Simple-Todo-App.git (fetch)
+	origin  https://github.com/Ashraf840/Simple-Todo-App.git (push)
+
+4. Create another repository for this project which is integrated with rest API endpoints.
+repo name: Simple-Todo-App-V2.0
+
+5. Create another REMOTE to push the local repo to the newly created remote GitHub repo (Simple-Todo-App-V2.0)
+	git remote add originV2 https://github.com/Ashraf840/Simple-Todo-App-V2.0.git
+
+6. Check the git remotes again.
+	git remote -v
+[output]
+	origin  	https://github.com/Ashraf840/Simple-Todo-App.git (fetch)
+	origin  	https://github.com/Ashraf840/Simple-Todo-App.git (push)
+	originV2        https://github.com/Ashraf840/Simple-Todo-App-V2.0.git (fetch)
+	originV2        https://github.com/Ashraf840/Simple-Todo-App-V2.0.git (push)
+
+
+******** Create APIs for the "todoapp" component
+
+7. Create "api" directory for API-endpoints inside the app-component "todoapp".
+  Redirect the terminal to the directory "Simple-Todo-App (User Auth)/todoapp"
+	mkdir api
+	cd todoapp/api
+	touch "__init__.py"
+
+8. Create a "note.md" file, written the basic APIs for this app component
+
+9. Create some rest_framework configuration inside the project's "settings.py" file.
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAdminUser',
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 5
+}
+
+10. Create "serializers.py" file inside the "todoapp/api/" directory.
+    It is used while creating API views. The model ("MyTodo") of the "todoapp" is being serialized here
+    Create a class "MyTodoSerializer" inside the "serializers.py" file.
+
+class MyTodoSerializer(serializers.ModelSerializer):
+    class Meta():
+        model = MyTodo
+        fields = ['id', 'task',]
+
+11. Create "views.py" file inside the "todoapp/api/" directory.
+    "api_view" is used to create different APIs for the "todoapp". It worked as a decorator over every methods/ views craeted later.
+    	"def apiOverview(request):" is created for displaying all the API endpoints
+    	"def taskList(request):" is created for displaying all the tasks
+    	"def taskDetail(request, pk):" is created for displaying a single particular task
+    	"def taskCreate(request):" is created for creating a task
+    	"def taskUpdate(request, pk):" is created for updating a single particular task
+    	"def taskDelete(request, pk):" is created for deleting a single particular task
+
+12. Along with "@api_view" as a decorator over every views, 
+    another decorator called "@authentication_classes([BasicAuthentication])" is used over every view except "def apiOverview(request):",
+    because it only shows all the available API endpoints for this "todoapp" component.
+
+13. After creating all the views for the APIs, create the corresponding URLs for those views.
+    Define a app name inside the "urls.py" file.
+app_name = 'todoApi'
+urlpatterns = [
+    path('', views.apiOverview, name='api_overview'),
+    path('task-list/', views.taskList, name='task_list'),
+    path('task-detail/<str:pk>/', views.taskDetail, name='task_detail'),
+    path('task-create/', views.taskCreate, name='task_create'),
+    path('task-update/<str:pk>/', views.taskUpdate, name='task_update'),
+    path('task-delete/<str:pk>/', views.taskDelete, name='task_delete'),
+]
+
+14. Include the "todoapp/api/urls.py" inside the base project's "urls.py" file.
+urlpatterns = [
+    .................,
+    path('api/todo/', include(('todoapp.api.urls', 'app_name'), namespace='todo_api')),
+]
+
+
+15. Test all the APIs using "Postman". Though started the Postman testing immediately after creating the "apiOverview(request)" view, join this view to the local "todoapp/api/urls.py", the include that to the base porject's "basic_crud_project/urls.py" file.
+
+
+******** Push the modifications to the GitHub repo ("Simple-Todo-App-V2.0") using Git
+
+16. Add the files to the local Git, the push that to the remote GitHub repo's ("Simple-Todo-App-V2.0") "dev" branch.
+	git status
+	git remote -v
+	git add .
+	git commit -m "Added project's information text file"
+	git push -u originV2
+
+17. In the GitHub online, merge the pushed commit to the "main" branch.
+	
+
+******** Craete User Authentication Functionality
+
+18. Create another app named "authentication" inside project's the working directory. 
+    Enable the python virtual environment of specified for this project.
+	python manage.py startapp authentication
+
+19. Install this app to the project's "settings.py" file's "INSTALLED_APPS[]" section.
+INSTALLED_APPS = [
+    ............................,
+    'todoapp.apps.TodoappConfig',
+    'rest_framework',
+    # 'rest_framework.authtoken',
+    'authentication.apps.AuthenticationConfig',
+]
+
+20. Create "templates/authentication/login.html" & "templates/authentication/registration.html" file 
+    and use the "templates/base.html" file as the base template.
+
+21. Create two views/ methods inside the "authentication" app-component for registering & logging users into the system.
+	"def  userRegistration(request):"
+	"def  userLogin(request):"
+
+22. Create "authentication/urls.py" to route those views created aforementioned.
+app_name = 'userAuth'
+urlpatterns = [
+    path('user-registration/', views.userRegistration, name='user-registration'),
+    path('user-login/', views.userLogin, name='user-login'),
+]
+
+23. Include the "authentication/urls.py" file's URLs inside the base-urls file.
+urlpatterns = [
+    .....................,
+    path('api/todo/', include(('todoapp.api.urls', 'app_name'), namespace='todo_api')),
+    path('auth/', include(('authentication.urls', 'app_name'), namespace='user_auth')),
+]
+
+24. Create "authentication/forms.py" to create forms ("ModelForm") from the model ("User") to create user in the system.
+	"class CreateUserForm(UserCreationForm):"
+	"class LoginUserForm(AuthenticationForm):"
+
+25. Call the "CreateUserForm" to the "userRegistration" view/ method inside 
+    the "authentication/views.py" file to show the user-registration form initially.
+    Then call the form inside the "templates/authentication/registration.html" & add some styling.
+    Basic "Registration form" is created without having the "POST" method functionality.
+    Create "Login Form" without having the "POST" method functionality.
+
+26. Create Nav-bar in this project inside the "templates/todo/alltodos.html" & "templates/todo/edittodo.html" web pages.
+    Add two buttons for "user Registration" & "User Login" in the nav-bar of this project. Thus, I can redirect to those pages easily while 
+    development phase. (These buttons be removed later)
+    Add "alltodos" button inside both the forms (reg & login forms) for the same previous reason. (These buttons be removed later)
+
+27. Create the "request.POST" inside the "userRegistration" method to register users into the system.
+
+28. Create the "request.POST" inside the "userLogin" method to login a user into the system.
+
+29. Create the "userLogout" method to logout a user from the system. Create a logout modal, to prompt the user to confirm logout.
+
+30. Add decorator to "authentication/decorators.py" to stop authenticated users to
+    redirect to the login and registration pages.
+    Add decorator to "todoapp/decorators.py" to stop un-authenticated users to 
+    redirect to the alltodos, edittodos or deletetodos pages.
+
+
+******** Craete Tasks Based On Users Functionality
+
+31. Create another field ("owner") to assign user to each task in the "MyTodo" model.
+
+32. Make migration and migrate to the django database (at this stage, using dbsqlite3)
+	python manage.py makemigrations
+	python manage.py migrate
+
+33. Make another column in the front-end to show the owner of each task. (ONLY CAN BE SHOWN & EDITED BY ADMIN & THE OWNER)
+
+34. Modify the view "allTodos" inside "todoapp/views.py" to allow the SUPERUSER to view all the tasks created by everyone.
+
+35. Add another 2 fields into model "MyTodo" inside "todoapp/models.py" file to show "date_created" 
+    & "date_modified_task" in backend ("todoapp/admin.py") & in frontend ("templates/todo/alltodos.html").
+    
+    ******** There's a issue with the timezone, the model is automatically 
+    collecting the dates correctly, but the local timezone is somehow conveting to "UTC" ********
+    
+    ** Solution Article Ref: https://www.sankalpjonna.com/learn-django/how-timezones-work-in-django
+    
+    Solution: I'll stick with what django is automatically storing in the "date_created"
+
+
+******** Push the modifications to the GitHub repo ("Simple-Todo-App-V2.0") using Git
+
+36. Create another remote GitHub repo ("Simple-Todo-App-V2.1") to push this modification.
+
+36.1. Create another remote to the local Git.
+	git remote add originV3 https://github.com/Ashraf840/Simple-Todo-App-V2.1.git
+
+36.1. Add the files to the local Git, the push that to the remote GitHub repo's ("Simple-Todo-App-V2.1") "main" branch first, then "dev" branch.
+	git status
+	git remote -v
+	git add .
+	git commit -m "User Authentication & User Based Task Creation-New Repo"
+	git push -u originV3
+	git checkout <b> dev
+	git status
+	git push -u originV3
