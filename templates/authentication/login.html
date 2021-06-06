@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} {{ title }}  {% endblock %}
+
+{% block stylesheet %}
+  <link rel="stylesheet" href="{% static 'css/alltodos.css' %}">
+{% endblock %}
+
+{% block content %}
+
+  <h1 style="user-select:none">Simple Todo App: Login Page</h1>
+
+
+  <div class="card" style="margin-top: 100px;">
+        <div class="card-body">
+            <div class="card-title">
+                <h4>Register for a free account</h4>
+            </div>
+        </div>
+        
+        <hr/>
+
+
+        <form method="POST">
+        {% csrf_token %}
+
+            <!-- form goes here -->
+            <!-- username -->
+            <div class="form-group p-3">
+                <div class = "form-row d-flex justify-content-center">
+                    <div class = "col-sm-3 position-relative">
+                        <span class="position-absolute top-50 start-0 translate-middle-y">
+                            {{ form.username.label }}:
+                        </span>
+                    </div>
+                    <div class = "col-sm-9 text-center">
+                        {{ form.username }}
+                    </div>
+                </div>
+            </div>
+            <!-- password -->
+            <div class="form-group p-3">
+                <div class = "form-row d-flex justify-content-center">
+                    <div class = "col-sm-3 position-relative">
+                        <span class="position-absolute top-50 start-0 translate-middle-y">
+                            {{ form.password.label }}:
+                        </span>
+                    </div>
+                    <div class = "col-sm-9 text-center">
+                        {{ form.password }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- submit btn -->
+            <div class="form-group p-1 rounded mx-3 mt-4">
+                <div class = "form-row d-flex justify-content-center">
+                    <div class="col-sm d-grid gap-2">
+                        <button type="submit" class="btn" id="send_btn" style="background-color: #313c44; color: #f3f3f3;">Login</button>
+                    </div>
+                </div>
+            </div>
+
+            <br/><br/><br/>
+            <div class="container">
+                <div class="row">
+                <div class="col d-flex flex-row align-items-center">
+                    <span class="badge bg-light">
+                    <a href="{% url 'userAuthApp:user_reg' %}">Don't have an account? Register Now!</a>
+                    </span>
+                </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+{% endblock %}
+
+
+<!-- javascript -->
+{% block jsContent %} 
+  <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script> -->
+{% endblock %}

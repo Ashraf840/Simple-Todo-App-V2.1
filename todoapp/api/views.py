@@ -9,6 +9,8 @@ from rest_framework.authentication import BasicAuthentication, SessionAuthentica
 
 ######## Function Based api_view()
 
+# APIs are tested using POSTMAN
+
 
 # Overview of API Endpoints
 @api_view(['GET'])

@@ -6,9 +6,7 @@ class TodoForm(forms.ModelForm):
     class Meta:
         model = MyTodo
         fields = ['task']
-        labels = {
-            'task': 'Task'
-        }
+        labels = {'task': 'Task'}
 
     def __init__(self, *args, **kwargs):
         super(TodoForm, self).__init__(*args, **kwargs)

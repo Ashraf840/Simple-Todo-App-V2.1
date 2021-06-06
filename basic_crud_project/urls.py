@@ -20,4 +20,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(('todoapp.urls', 'app_name'), namespace='todo')),
     path('api/todo/', include(('todoapp.api.urls', 'app_name'), namespace='todo_api')),
+    path('auth/', include(('authentication.urls', 'app_name'), namespace='user_auth')),
 ]

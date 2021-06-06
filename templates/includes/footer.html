@@ -4,7 +4,11 @@
         <center>
             <span>
                 <small class="text-danger"> 
-                    <b>***API endpoints enabled.</b> 
+                    <b>***API endpoints enabled.</b>
+                    <br>
+                    {% if user.is_authenticated %}
+                        <span>Logged in as <b>{{ user.username }}</b> </span>
+                    {% endif %}
                 </small>
             </span>
         </center>
