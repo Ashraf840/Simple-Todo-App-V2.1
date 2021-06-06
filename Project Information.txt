@@ -207,4 +207,11 @@ urlpatterns = [
 	git remote -v
 	git add .
 	git commit -m "User Authentication & User Based Task Creation"
-	git push -u originV2
+	git push -f originV3
+	git checkout dev
+	git status
+	git add .
+	git commit -m "Push to dev branch"
+	git push -u originV3
+	
+	
